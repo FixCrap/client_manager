@@ -27,7 +27,8 @@
 		"**/*.tsx",
 		".next/types/**/*.ts",
 		"app/page.js",
-		"app/components/ui/sparkles.js"
+		"app/components/ui/sparkles.js",
+		"app/clients/page.tsx"
 	],
 	"exclude": ["node_modules"]
 }
