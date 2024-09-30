@@ -1,11 +1,13 @@
 "use client";
 
 // components/DataTable.js
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
+import { BsFillTrash3Fill } from "react-icons/bs";
+import { BsPencilSquare } from "react-icons/bs";
+import { deleteClient, updateClient } from "@/lib/actions";
+import { useFormStatus } from "react-dom";
+
 const DataTable = ({ data }) => {
-	// const [data, setData] = useState(
-	// 	[...Array(100).keys()].map((i) => ({ id: i, name: `Item ${i + 1}` }))
-	// );
 	const [searchTerm, setSearchTerm] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(10);
@@ -27,9 +29,9 @@ const DataTable = ({ data }) => {
 		setModalOpen(true);
 	};
 
-	const handleDelete = (id) => {
-		setData(data.filter((item) => item.id !== id));
-	};
+	// const handleDelete = (id) => {
+	// 	setData(data.filter((item) => item.id !== id));
+	// };
 
 	const handleCloseModal = () => {
 		setModalOpen(false);
@@ -39,6 +41,13 @@ const DataTable = ({ data }) => {
 	const handlePageChange = (page) => {
 		setCurrentPage(page);
 	};
+
+	const [isPending, startTransition] = useTransition();
+
+	function handleDelete(id) {
+		if (confirm("Σίγουρα θέλετε να διαγράψετε αυτόν τον πελάτη;"))
+			startTransition(() => deleteClient(id));
+	}
 
 	return (
 		<div className='w-full mx-auto p-4 text-center'>
@@ -53,7 +62,7 @@ const DataTable = ({ data }) => {
 					ΠΕΛΑΤΕΣ
 				</h1>
 				<button
-					onClick={() => handleOpenModal(null)}
+					//onClick={() => handleOpenModal(null)}
 					className='mb-4 p-2 bg-blue-300/80 hover:bg-blue-300/20 text-white rounded'>
 					Νέος Πελάτης
 				</button>
@@ -104,13 +113,16 @@ const DataTable = ({ data }) => {
 								<button
 									onClick={() => handleOpenModal(item)}
 									className='text-blue-500 hover:text-blue-300'>
-									Edit
+									<BsPencilSquare size={20} />
 								</button>
 
 								<button
 									onClick={() => handleDelete(item.id)}
 									className='ml-2 text-red-500 hover:text-red-300'>
-									Delete
+									<BsFillTrash3Fill
+										size={20}
+										className={` ${isPending && "animate-pulse"}`}
+									/>
 								</button>
 							</td>
 						</tr>
@@ -139,7 +151,9 @@ const DataTable = ({ data }) => {
 
 			{/* Modal for creating/editing item */}
 			{modalOpen && (
-				<div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50'>
+				<form
+					action={updateClient}
+					className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50'>
 					<div className='bg-gray-800 p-5 rounded shadow-lg'>
 						<h2 className='text-lg font-bold'>
 							{currentItem ? "Edit Item" : "Create New Item"}
@@ -148,7 +162,8 @@ const DataTable = ({ data }) => {
 							type='text'
 							defaultValue={currentItem ? currentItem.name : ""}
 							className='mt-2 p-2 border rounded w-full'
-							placeholder='Ονοματεπώνυμο'
+							placeholder='name'
+							name='name'
 							onChange={(e) =>
 								setCurrentItem({ ...currentItem, name: e.target.value })
 							}
@@ -157,7 +172,8 @@ const DataTable = ({ data }) => {
 							type='text'
 							defaultValue={currentItem ? currentItem.phone : ""}
 							className='mt-2 p-2 border rounded w-full'
-							placeholder='Τηλέφωνο'
+							placeholder='phone'
+							name='phone'
 							onChange={(e) =>
 								setCurrentItem({ ...currentItem, phone: e.target.value })
 							}
@@ -166,7 +182,8 @@ const DataTable = ({ data }) => {
 							type='text'
 							defaultValue={currentItem ? currentItem.address : ""}
 							className='mt-2 p-2 border rounded w-full'
-							placeholder='Διεύθυνση'
+							placeholder='address'
+							name='address'
 							onChange={(e) =>
 								setCurrentItem({ ...currentItem, address: e.target.value })
 							}
@@ -175,7 +192,8 @@ const DataTable = ({ data }) => {
 							type='text'
 							defaultValue={currentItem ? currentItem.type_of_unit : ""}
 							className='mt-2 p-2 border rounded w-full'
-							placeholder='Τύπος Μονάδας'
+							placeholder='type_of_unit'
+							name='type_of_unit'
 							onChange={(e) =>
 								setCurrentItem({ ...currentItem, type_of_unit: e.target.value })
 							}
@@ -184,7 +202,8 @@ const DataTable = ({ data }) => {
 							type='text'
 							defaultValue={currentItem ? currentItem.qr_code : ""}
 							className='mt-2 p-2 border rounded w-full'
-							placeholder='QR Code'
+							placeholder='qr_code'
+							name='qr_code'
 							onChange={(e) =>
 								setCurrentItem({ ...currentItem, qr_code: e.target.value })
 							}
@@ -193,7 +212,8 @@ const DataTable = ({ data }) => {
 							type='text'
 							defaultValue={currentItem ? currentItem.observations : ""}
 							className='mt-2 p-2 border rounded w-full'
-							placeholder='Παρατηρήσεις'
+							placeholder='observations'
+							name='observations'
 							onChange={(e) =>
 								setCurrentItem({ ...currentItem, observations: e.target.value })
 							}
@@ -202,34 +222,31 @@ const DataTable = ({ data }) => {
 						<div className='flex justify-end mt-4'>
 							<button
 								onClick={handleCloseModal}
-								className='mr-2 p-2 bg-gray-300 rounded'>
-								Cancel
+								className='mr-2 p-2 bg-red-500 hover:bg-red-400 rounded '>
+								Ακύρωση
 							</button>
-							<button
-								onClick={() => {
-									if (currentItem) {
-										setData(
-											data.map((item) =>
-												item.id === currentItem.id ? currentItem : item
-											)
-										);
-									} else {
-										setData([
-											...data,
-											{ id: data.length, name: currentItem.name },
-										]);
-									}
-									handleCloseModal();
-								}}
-								className='p-2 bg-blue-500 text-white rounded'>
-								{currentItem ? "Update" : "Create"}
-							</button>
+							<Button />
 						</div>
 					</div>
-				</div>
+				</form>
 			)}
 		</div>
 	);
 };
+
+//   Update Button  //
+function Button() {
+	const { pending } = useFormStatus();
+
+	return (
+		<button
+			className={`p-2 bg-sky-500 hover:bg-sky-400 text-white rounded ${
+				pending && "animate-pulse"
+			} `}
+			disabled={pending}>
+			{pending ? "Ενημερώνεται..." : "Ενημέρωση"}
+		</button>
+	);
+}
 
 export default DataTable;
