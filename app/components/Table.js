@@ -4,14 +4,15 @@
 import React, { useState, useTransition } from "react";
 import { BsFillTrash3Fill } from "react-icons/bs";
 import { BsPencilSquare } from "react-icons/bs";
-import { deleteClient, updateClient } from "@/lib/actions";
+import { deleteClient, updateClient, createNewClient } from "@/lib/actions";
 import { useFormStatus } from "react-dom";
 
 const DataTable = ({ data }) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(10);
-	const [modalOpen, setModalOpen] = useState(false);
+	const [modalOpenEdit, setModalOpenEdit] = useState(false);
+	const [modalOpenCreate, setModalOpenCreate] = useState(false);
 	const [currentItem, setCurrentItem] = useState(null);
 
 	// Handle search
@@ -24,17 +25,27 @@ const DataTable = ({ data }) => {
 	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 	const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
-	const handleOpenModal = (item) => {
+	const handleOpenModalEdit = (item) => {
 		setCurrentItem(item);
-		setModalOpen(true);
+		setModalOpenEdit(true);
+	};
+
+	const handleOpenModalCreate = (item) => {
+		setCurrentItem(item);
+		setModalOpenCreate(true);
 	};
 
 	// const handleDelete = (id) => {
 	// 	setData(data.filter((item) => item.id !== id));
 	// };
 
-	const handleCloseModal = () => {
-		setModalOpen(false);
+	const handleCloseModalEdit = () => {
+		setModalOpenEdit(false);
+		setCurrentItem(null);
+	};
+
+	const handleCloseModalCreate = () => {
+		setModalOpenCreate(false);
 		setCurrentItem(null);
 	};
 
@@ -62,7 +73,7 @@ const DataTable = ({ data }) => {
 					ΠΕΛΑΤΕΣ
 				</h1>
 				<button
-					//onClick={() => handleOpenModal(null)}
+					onClick={() => handleOpenModalCreate(null)}
 					className='mb-4 p-2 bg-blue-300/80 hover:bg-blue-300/20 text-white rounded'>
 					Νέος Πελάτης
 				</button>
@@ -71,7 +82,7 @@ const DataTable = ({ data }) => {
 			<table className='min-w-full border'>
 				<thead>
 					<tr className='bg-black '>
-						<th className='p-2 border'>ID</th>
+						{/* <th className='p-2 border'>ID</th> */}
 						<th className='p-2 border'>Ονοματεπώνυμο</th>
 						<th className='p-2 border'>Τηλέφωνο</th>
 						<th className='p-2 border'>Διεύθυνση</th>
@@ -89,7 +100,7 @@ const DataTable = ({ data }) => {
 						<tr
 							key={item.id}
 							className='hover:bg-gray-100/5'>
-							<td className='p-2 border'>{item.id}</td>
+							{/* <td className='p-2 border'>{item.id}</td> */}
 							<td className='p-2 border'>{item.name}</td>
 							<td className='p-2 border'>{item.phone}</td>
 							<td className='p-2 border'>{item.address}</td>
@@ -111,7 +122,7 @@ const DataTable = ({ data }) => {
 
 							<td className='p-2 border'>
 								<button
-									onClick={() => handleOpenModal(item)}
+									onClick={() => handleOpenModalEdit(item)}
 									className='text-blue-500 hover:text-blue-300'>
 									<BsPencilSquare size={20} />
 								</button>
@@ -131,7 +142,7 @@ const DataTable = ({ data }) => {
 			</table>
 
 			{/* Pagination */}
-			<div className='flex justify-between mt-4'>
+			<div className='flex justify-center mt-4'>
 				{Array.from(
 					{ length: Math.ceil(filteredData.length / itemsPerPage) },
 					(_, i) => (
@@ -149,8 +160,8 @@ const DataTable = ({ data }) => {
 				)}
 			</div>
 
-			{/* Modal for creating/editing item */}
-			{modalOpen && (
+			{/* Modal for editing item */}
+			{modalOpenEdit && (
 				<form
 					action={updateClient}
 					className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50'>
@@ -221,11 +232,93 @@ const DataTable = ({ data }) => {
 
 						<div className='flex justify-end mt-4'>
 							<button
-								onClick={handleCloseModal}
+								onClick={handleCloseModalEdit}
 								className='mr-2 p-2 bg-red-500 hover:bg-red-400 rounded '>
 								Ακύρωση
 							</button>
-							<Button />
+							<ButtonUpdate />
+						</div>
+					</div>
+				</form>
+			)}
+
+			{/* Modal for creating item */}
+			{modalOpenCreate && (
+				<form
+					action={createNewClient}
+					className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50'>
+					<div className='bg-gray-800 p-5 rounded shadow-lg'>
+						<h2 className='text-lg font-bold'>
+							{currentItem ? "Edit Item" : "Create New Item"}
+						</h2>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.name : ""}
+							className='mt-2 p-2 border rounded w-full'
+							placeholder='name'
+							name='name'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, name: e.target.value })
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.phone : ""}
+							className='mt-2 p-2 border rounded w-full'
+							placeholder='phone'
+							name='phone'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, phone: e.target.value })
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.address : ""}
+							className='mt-2 p-2 border rounded w-full'
+							placeholder='address'
+							name='address'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, address: e.target.value })
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.type_of_unit : ""}
+							className='mt-2 p-2 border rounded w-full'
+							placeholder='type_of_unit'
+							name='type_of_unit'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, type_of_unit: e.target.value })
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.qr_code : ""}
+							className='mt-2 p-2 border rounded w-full'
+							placeholder='qr_code'
+							name='qr_code'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, qr_code: e.target.value })
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.observations : ""}
+							className='mt-2 p-2 border rounded w-full'
+							placeholder='observations'
+							name='observations'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, observations: e.target.value })
+							}
+						/>
+
+						<div className='flex justify-end mt-4'>
+							<button
+								onClick={handleCloseModalCreate}
+								className='mr-2 p-2 bg-red-500 hover:bg-red-400 rounded '>
+								Ακύρωση
+							</button>
+							<ButtonCreate />
 						</div>
 					</div>
 				</form>
@@ -235,7 +328,7 @@ const DataTable = ({ data }) => {
 };
 
 //   Update Button  //
-function Button() {
+function ButtonUpdate() {
 	const { pending } = useFormStatus();
 
 	return (
@@ -245,6 +338,20 @@ function Button() {
 			} `}
 			disabled={pending}>
 			{pending ? "Ενημερώνεται..." : "Ενημέρωση"}
+		</button>
+	);
+}
+//   Create Button  //
+function ButtonCreate() {
+	const { pending } = useFormStatus();
+
+	return (
+		<button
+			className={`p-2 bg-sky-500 hover:bg-sky-400 text-white rounded ${
+				pending && "animate-pulse"
+			} `}
+			disabled={pending}>
+			{pending ? "Ενημερώνεται..." : "Δημιουργία"}
 		</button>
 	);
 }
