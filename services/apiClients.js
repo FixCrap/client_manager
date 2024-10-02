@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 
-export async function getClients() {
-	const { data, error } = await supabase.from("Clients").select("*");
+export async function getClientsAlarm() {
+	const { data, error } = await supabase.from("Clients_alarm").select("*");
 
 	if (error) {
 		console.error("error");

@@ -28,7 +28,7 @@
 		".next/types/**/*.ts",
 		"app/page.js",
 		"app/components/ui/sparkles.js",
-		"app/clients/page.js"
+		"app/clients_alarms/page.js"
 	],
 	"exclude": ["node_modules"]
 }

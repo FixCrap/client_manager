@@ -1,5 +1,5 @@
 import Table from "@/app/components/Table";
-import { getClients } from "@/services/apiClients";
+import { getClientsAlarm } from "@/services/apiClients";
 
 // async function getClients(): Promise<Client[]> {
 // 	const res = await fetch(
@@ -11,7 +11,7 @@ import { getClients } from "@/services/apiClients";
 export const revalidate = 0;
 
 export default async function page() {
-	const data = await getClients();
+	const data = await getClientsAlarm();
 
 	return (
 		//<Clients />
