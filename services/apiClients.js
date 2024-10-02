@@ -9,3 +9,13 @@ export async function getClientsAlarm() {
 	}
 	return data;
 }
+
+export async function getClientsDVR() {
+	const { data, error } = await supabase.from("Clients_DVR").select("*");
+
+	if (error) {
+		console.error("error");
+		throw new Error("Clients could not be loaded");
+	}
+	return data;
+}

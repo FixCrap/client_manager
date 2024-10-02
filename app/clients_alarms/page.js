@@ -15,7 +15,7 @@ export default async function page() {
 
 	return (
 		//<Clients />
-		<section className='py-24  w-full'>
+		<section className=' h-screen  w-full'>
 			<DataTable data={data} />
 		</section>
 	);

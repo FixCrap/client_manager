@@ -7,9 +7,9 @@ import { BsPencilSquare } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
 
 import {
-	deleteClientAlarm,
-	updateClientAlarm,
-	createNewClientAlarm,
+	updateClientDVR,
+	createNewClientDVR,
+	deleteClientDVR,
 } from "@/lib/actions";
 import { useFormStatus } from "react-dom";
 import { TextGenerateEffect } from "./ui/text-generate-effect";
@@ -17,7 +17,7 @@ import { CSVLink } from "react-csv";
 import Link from "next/link";
 import { logout } from "@/app/logout/actions";
 
-const DataTable = ({ data }) => {
+const TableDVR = ({ data }) => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [itemsPerPage] = useState(10);
@@ -41,9 +41,11 @@ const DataTable = ({ data }) => {
 	);
 
 	// Handle pagination
-	const indexOfLastItem = currentPage * itemsPerPage;
-	const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-	const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+	// const indexOfLastItem = currentPage * itemsPerPage;
+	// const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+	// const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+
+	const currentItems = filteredData;
 
 	const handleOpenModalEdit = (item) => {
 		setCurrentItem(item);
@@ -65,15 +67,15 @@ const DataTable = ({ data }) => {
 		setCurrentItem(null);
 	};
 
-	const handlePageChange = (page) => {
-		setCurrentPage(page);
-	};
+	// const handlePageChange = (page) => {
+	// 	setCurrentPage(page);
+	// };
 
 	const [isPending, startTransition] = useTransition();
 
 	function handleDelete(id) {
 		if (confirm("Σίγουρα θέλετε να διαγράψετε αυτόν τον πελάτη;"))
-			startTransition(() => deleteClientAlarm(id));
+			startTransition(() => deleteClientDVR(id));
 	}
 
 	return (
@@ -86,22 +88,60 @@ const DataTable = ({ data }) => {
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
 
-				<h1 className='text-5xl tracking-widest font-extrabold text-purple mb-10'>
-					ΣΥΝΑΓΕΡΜΟΙ
+				<h1 className='text-5xl tracking-widest font-extrabold ml-32 text-purple mb-10'>
+					DVR
 				</h1>
+				<div className='flex justify-center items-center  gap-2'>
+					<Link
+						href='/'
+						className=' '>
+						<button className='bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6  text-white inline-block  '>
+							<span className='absolute inset-0 overflow-hidden rounded-full'>
+								<span className='absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100' />
+							</span>
+							<div className='relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 h-12  '>
+								<span className='text-lg'>Επιστροφή</span>
+								<svg
+									fill='none'
+									height='25'
+									viewBox='0 0 24 24'
+									width='25'
+									xmlns='http://www.w3.org/2000/svg'>
+									<path
+										d='M10.75 8.75L14.25 12L10.75 15.25'
+										stroke='currentColor'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										strokeWidth='1.5'
+									/>
+								</svg>
+							</div>
+							<span className='absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40' />
+						</button>
+					</Link>
 
-				<button
-					onClick={() => handleOpenModalCreate(null)}
-					className='shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black dark:border-purple 
+					<form
+						action={logout}
+						className='flex justify-end items-center '>
+						<button className='bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6  text-white inline-block '>
+							<span className='absolute inset-0 overflow-hidden rounded-full'>
+								<span className='absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100' />
+							</span>
+							<div className='relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 h-12  '>
+								<span className='text-base'>Αποσύνδεση</span>
+								<BiLogOut size={20} />
+							</div>
+							<span className='absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40' />
+						</button>
+					</form>
+
+					<button
+						onClick={() => handleOpenModalCreate(null)}
+						className='shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black dark:border-purple 
 					 dark:text-purple  rounded-lg font-bold transform hover:-translate-y-1 transition duration-400'>
-					Νέος Πελάτης
-				</button>
-
-				{/* <button
-					onClick={() => handleOpenModalCreate(null)}
-					className='mb-4 p-2 bg-blue-300/80 hover:bg-blue-300/20 text-white rounded'>
-					Νέος Πελάτης
-				</button> */}
+						Νέος Πελάτης
+					</button>
+				</div>
 			</div>
 
 			<table className='min-w-full border   '>
@@ -111,11 +151,11 @@ const DataTable = ({ data }) => {
 						<th className='p-2 border'>Ονοματεπώνυμο</th>
 						<th className='p-2 border'>Τηλέφωνο</th>
 						<th className='p-2 border'>Διεύθυνση</th>
-						<th className='p-2 border'>Τύπος Μονάδας</th>
 						<th className='p-2 border'>QR Code</th>
+						<th className='p-2 border'>Κωδικός Admin</th>
+						<th className='p-2 border'>Guest Admin</th>
+						<th className='p-2 border'>Ημ. Εγκατάστασης</th>
 						<th className='p-2 border '>Παρατηρήσεις</th>
-
-						<th className='p-2  border '>Περισσότερα</th>
 
 						<th className='p-2 border'>Ενέργειες</th>
 					</tr>
@@ -129,15 +169,11 @@ const DataTable = ({ data }) => {
 							<td className='p-2 border'>{item.name}</td>
 							<td className='p-2 border'>{item.phone}</td>
 							<td className='p-2 border'>{item.address}</td>
-							<td className='p-2 border'>{item.type_of_unit}</td>
-
 							<td className='p-2 border'>{item.qr_code}</td>
+							<td className='p-2 border'>{item.Admin_password}</td>
+							<td className='p-2 border'>{item.guest_password}</td>
+							<td className='p-2 border'>{item.date}</td>
 							<td className='p-2 border  break-all'>{item.observations}</td>
-							<td className='p-2 border'>
-								<span className='hover:text-purple cursor-pointer'>
-									Ζώνες →
-								</span>
-							</td>
 
 							<td className=' p-2 border'>
 								<div className='flex justify-center gap-2 '>
@@ -163,8 +199,8 @@ const DataTable = ({ data }) => {
 			</table>
 
 			{/* Pagination */}
-			<div className='flex justify-between items-center'>
-				<div className='flex justify-start mt-4 '>
+			{/* <div className='flex justify-between items-center'> */}
+			{/* <div className='flex justify-start mt-4 '>
 					{Array.from(
 						{ length: Math.ceil(filteredData.length / itemsPerPage) },
 						(_, i) => (
@@ -177,12 +213,7 @@ const DataTable = ({ data }) => {
 										: "bg-black text-white hover:bg-white/10"
 								}`}>
 								{i + 1}
-							</button>
-						)
-					)}
-				</div>
-
-				<div>
+							</button><div>
 					<Link
 						href='/'
 						className='mt-4 '>
@@ -211,35 +242,38 @@ const DataTable = ({ data }) => {
 						</button>
 					</Link>
 				</div>
+				<form
+					action={logout}
+					className='flex justify-end items-center mt-4'>
+					<button className='bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6  text-white inline-block '>
+						<span className='absolute inset-0 overflow-hidden rounded-full'>
+							<span className='absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100' />
+						</span>
+						<div className='relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 h-12  '>
+							<span className='text-base'>Αποσύνδεση</span>
+							<BiLogOut size={20} />
+						</div>
+						<span className='absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40' />
+					</button>
+				</form>
 			</div>
-
-			<form
-				action={logout}
-				className='flex justify-end items-center mt-4'>
-				<button className='bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6  text-white inline-block '>
-					<span className='absolute inset-0 overflow-hidden rounded-full'>
-						<span className='absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100' />
-					</span>
-					<div className='relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 h-12  '>
-						<span className='text-base'>Αποσύνδεση</span>
-						<BiLogOut size={20} />
-					</div>
-					<span className='absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40' />
-				</button>
-			</form>
+						)
+					)}
+				</div>{" "}
+				
+			
 
 			{/* Modal for editing item */}
 
 			{modalOpenEdit && (
 				<form
-					action={updateClientAlarm}
+					action={updateClientDVR}
 					className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 '>
 					<div className='bg-gray-800 p-5 rounded shadow-lg '>
-						<h2 className='text-lg font-bold text-purple'>
-							{currentItem ? "Ενημέρωση" : "Create New Item"}
-						</h2>
+						<h2 className='text-lg font-bold text-purple'>Ενημέρωση</h2>
 						<input
 							type='text'
+							disabled
 							defaultValue={currentItem ? currentItem.id : ""}
 							className='mt-2 p-2 border rounded border-purple   w-full hidden '
 							placeholder='ID'
@@ -278,16 +312,7 @@ const DataTable = ({ data }) => {
 								setCurrentItem({ ...currentItem, address: e.target.value })
 							}
 						/>
-						<input
-							type='text'
-							defaultValue={currentItem ? currentItem.type_of_unit : ""}
-							className='mt-2 p-2 border rounded w-full border-purple'
-							placeholder='Τύπος Μονάδας'
-							name='type_of_unit'
-							onChange={(e) =>
-								setCurrentItem({ ...currentItem, type_of_unit: e.target.value })
-							}
-						/>
+
 						<input
 							type='text'
 							defaultValue={currentItem ? currentItem.qr_code : ""}
@@ -300,6 +325,42 @@ const DataTable = ({ data }) => {
 						/>
 						<input
 							type='text'
+							defaultValue={currentItem ? currentItem.Admin_password : ""}
+							className='mt-2 p-2 border rounded w-full border-purple'
+							placeholder='Κωδικός Admin'
+							name='Admin_password'
+							onChange={(e) =>
+								setCurrentItem({
+									...currentItem,
+									Admin_password: e.target.value,
+								})
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.guest_password : ""}
+							className='mt-2 p-2 border rounded w-full border-purple'
+							placeholder='Κωδικός guest'
+							name='guest_password'
+							onChange={(e) =>
+								setCurrentItem({
+									...currentItem,
+									guest_password: e.target.value,
+								})
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.date : ""}
+							className='mt-2 p-2 border rounded w-full border-purple'
+							placeholder='Ημερομηνία Εγκατάστασης'
+							name='date'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, date: e.target.value })
+							}
+						/>
+						<input
+							type='text'
 							defaultValue={currentItem ? currentItem.observations : ""}
 							className='mt-2 p-2 border rounded w-full border-purple'
 							placeholder='Παρατηρήσεις'
@@ -308,7 +369,6 @@ const DataTable = ({ data }) => {
 								setCurrentItem({ ...currentItem, observations: e.target.value })
 							}
 						/>
-
 						<div className='flex justify-end mt-4 '>
 							<button
 								onClick={handleCloseModalEdit}
@@ -328,7 +388,7 @@ const DataTable = ({ data }) => {
 			{/* Modal for creating item */}
 			{modalOpenCreate && (
 				<form
-					action={createNewClientAlarm}
+					action={createNewClientDVR}
 					className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50  '>
 					<div className='bg-gray-800 p-5 rounded shadow-lg'>
 						<h2 className='text-lg font-bold text-purple'>
@@ -336,8 +396,19 @@ const DataTable = ({ data }) => {
 						</h2>
 						<input
 							type='text'
+							disabled
+							defaultValue={currentItem ? currentItem.id : ""}
+							className='mt-2 p-2 border rounded border-purple   w-full hidden '
+							placeholder='ID'
+							name='id'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, id: e.target.value })
+							}
+						/>
+						<input
+							type='text'
 							defaultValue={currentItem ? currentItem.name : ""}
-							className='mt-2 p-2 border rounded w-full border-purple'
+							className='mt-2 p-2 border rounded border-purple   w-full'
 							placeholder='Ονοματεπώνυμο'
 							name='name'
 							onChange={(e) =>
@@ -364,16 +435,7 @@ const DataTable = ({ data }) => {
 								setCurrentItem({ ...currentItem, address: e.target.value })
 							}
 						/>
-						<input
-							type='text'
-							defaultValue={currentItem ? currentItem.type_of_unit : ""}
-							className='mt-2 p-2 border rounded w-full border-purple'
-							placeholder='Τύπος Μονάδας'
-							name='type_of_unit'
-							onChange={(e) =>
-								setCurrentItem({ ...currentItem, type_of_unit: e.target.value })
-							}
-						/>
+
 						<input
 							type='text'
 							defaultValue={currentItem ? currentItem.qr_code : ""}
@@ -382,6 +444,42 @@ const DataTable = ({ data }) => {
 							name='qr_code'
 							onChange={(e) =>
 								setCurrentItem({ ...currentItem, qr_code: e.target.value })
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.Admin_password : ""}
+							className='mt-2 p-2 border rounded w-full border-purple'
+							placeholder='Κωδικός Admin'
+							name='Admin_password'
+							onChange={(e) =>
+								setCurrentItem({
+									...currentItem,
+									Admin_password: e.target.value,
+								})
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.guest_password : ""}
+							className='mt-2 p-2 border rounded w-full border-purple'
+							placeholder='Κωδικός guest'
+							name='guest_password'
+							onChange={(e) =>
+								setCurrentItem({
+									...currentItem,
+									guest_password: e.target.value,
+								})
+							}
+						/>
+						<input
+							type='text'
+							defaultValue={currentItem ? currentItem.date : ""}
+							className='mt-2 p-2 border rounded w-full border-purple'
+							placeholder='Ημερομηνία Εγκατάστασης'
+							name='date'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, date: e.target.value })
 							}
 						/>
 						<input
@@ -443,4 +541,4 @@ function ButtonCreate() {
 	);
 }
 
-export default DataTable;
+export default TableDVR;
