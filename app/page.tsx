@@ -1,5 +1,12 @@
-import { Home } from "@/app/components/Home";
+import React from "react";
+import { Choose } from "@/app/components/Choose";
 
-export default function page() {
-	return <Home />;
+function page() {
+	return (
+		<div>
+			<Choose />
+		</div>
+	);
 }
+
+export default page;

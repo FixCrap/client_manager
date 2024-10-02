@@ -1,14 +1,9 @@
-"use client";
 import React from "react";
 import { Label } from "./label";
 import { Input } from "./input";
 import { cn } from "@/lib/utils";
-import {
-	IconBrandGithub,
-	IconBrandGoogle,
-	IconBrandOnlyfans,
-} from "@tabler/icons-react";
-import { login } from "@/services/apiAuth";
+
+import { login } from "@/app/login/actions";
 
 export function SignupForm() {
 	// 	const handleSubmit = (e) => {
@@ -34,6 +29,7 @@ export function SignupForm() {
 							placeholder='Όνομα Χρήστη'
 							type='text'
 							autoComplete='username'
+							required
 						/>
 					</LabelInputContainer>
 				</div>
@@ -46,6 +42,7 @@ export function SignupForm() {
 						placeholder='••••••••'
 						type='password'
 						autoComplete='current-password'
+						required
 					/>
 				</LabelInputContainer>
 

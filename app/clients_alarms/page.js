@@ -1,4 +1,4 @@
-import Table from "@/app/components/Table";
+import DataTable from "@/app/components/TableClientsAlarm";
 import { getClientsAlarm } from "@/services/apiClients";
 
 // async function getClients(): Promise<Client[]> {
@@ -16,7 +16,7 @@ export default async function page() {
 	return (
 		//<Clients />
 		<section className='py-24  w-full'>
-			<Table data={data} />
+			<DataTable data={data} />
 		</section>
 	);
 }
