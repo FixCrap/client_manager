@@ -104,7 +104,7 @@ const DataTable = ({ data }) => {
 			<table className='min-w-full border   '>
 				<thead>
 					<tr className='bg-black text-purple  '>
-						{/* <th className='p-2 border'>ID</th> */}
+						<th className='p-2 border'>ID</th>
 						<th className='p-2 border'>Ονοματεπώνυμο</th>
 						<th className='p-2 border'>Τηλέφωνο</th>
 						<th className='p-2 border'>Διεύθυνση</th>
@@ -122,7 +122,7 @@ const DataTable = ({ data }) => {
 						<tr
 							key={item.id}
 							className='hover:bg-gray-100/5'>
-							{/* <td className='p-2 border'>{item.id}</td> */}
+							<td className='p-2 border'>{item.id}</td>
 							<td className='p-2 border'>{item.name}</td>
 							<td className='p-2 border'>{item.phone}</td>
 							<td className='p-2 border'>{item.address}</td>
@@ -215,6 +215,17 @@ const DataTable = ({ data }) => {
 						<h2 className='text-lg font-bold text-purple'>
 							{currentItem ? "Ενημέρωση" : "Create New Item"}
 						</h2>
+						<input
+							type='text'
+							disabled
+							defaultValue={currentItem ? currentItem.id : ""}
+							className='mt-2 p-2 border rounded border-purple   w-full '
+							placeholder='ID'
+							name='id'
+							onChange={(e) =>
+								setCurrentItem({ ...currentItem, id: e.target.value })
+							}
+						/>
 						<input
 							type='text'
 							defaultValue={currentItem ? currentItem.name : ""}
