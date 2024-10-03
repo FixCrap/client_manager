@@ -16,7 +16,7 @@ export async function login(formData) {
 	const { error } = await supabase.auth.signInWithPassword(data);
 
 	if (error) {
-		redirect("/error");
+		redirect("/login?message=Could not authenticate user");
 	}
 
 	revalidatePath("/", "layout");
