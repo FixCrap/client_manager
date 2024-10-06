@@ -19,3 +19,17 @@ export async function getClientsDVR() {
 	}
 	return data;
 }
+
+export async function getClientZone(id) {
+	const { data, error } = await supabase
+		.from("zones")
+		.select("*")
+		.eq("id", id)
+		.single();
+
+	if (error) {
+		console.error("error");
+		throw new Error("Zones could not be loaded");
+	}
+	return data;
+}

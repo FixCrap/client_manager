@@ -134,9 +134,11 @@ const DataTable = ({ data }) => {
 							<td className='p-2 border'>{item.qr_code}</td>
 							<td className='p-2 border  break-all'>{item.observations}</td>
 							<td className='p-2 border'>
-								<span className='hover:text-purple cursor-pointer'>
+								<Link
+									href={`/clients_alarms/${item.id}`}
+									className='hover:text-purple cursor-pointer'>
 									Ζώνες →
-								</span>
+								</Link>
 							</td>
 
 							<td className=' p-2 border'>
